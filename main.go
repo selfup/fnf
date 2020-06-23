@@ -22,42 +22,42 @@ func main() {
 	scanKeywords := strings.Split(keywords, ",")
 	scanPaths := strings.Split(paths, ",")
 
-	nfsf := NewFileSizeFinder(scanKeywords)
+	nfnf := NewFileNameFinder(scanKeywords)
 
 	for _, path := range scanPaths {
-		nfsf.Scan(path)
+		nfnf.Scan(path)
 	}
 
-	for _, file := range nfsf.Files {
+	for _, file := range nfnf.Files {
 		fmt.Println(file)
 	}
 }
 
-// FileSizeFinder struct contains needed data to perform concurrent operations
-type FileSizeFinder struct {
+// FileNameFinder struct contains needed data to perform concurrent operations
+type FileNameFinder struct {
 	mutex     sync.Mutex
 	Direction string
 	Files     []string
 	Keywords  []string
 }
 
-// NewFileSizeFinder creates a pointer to FileSizeFinder with default values
-func NewFileSizeFinder(keywords []string) *FileSizeFinder {
-	fsf := new(FileSizeFinder)
+// NewFileNameFinder creates a pointer to FileNameFinder with default values
+func NewFileNameFinder(keywords []string) *FileNameFinder {
+	fnf := new(FileNameFinder)
 
 	if runtime.GOOS == "windows" {
-		fsf.Direction = "\\"
+		fnf.Direction = "\\"
 	} else {
-		fsf.Direction = "/"
+		fnf.Direction = "/"
 	}
 
-	fsf.Keywords = keywords
+	fnf.Keywords = keywords
 
-	return fsf
+	return fnf
 }
 
 // Scan is a concurrent/parallel directory walker
-func (f *FileSizeFinder) Scan(directory string) {
+func (f *FileNameFinder) Scan(directory string) {
 	_, err := ioutil.ReadDir(directory)
 	if err != nil {
 		panic(err)
@@ -66,7 +66,7 @@ func (f *FileSizeFinder) Scan(directory string) {
 	f.findFiles(directory, "")
 }
 
-func (f *FileSizeFinder) findFiles(directory string, prefix string) {
+func (f *FileNameFinder) findFiles(directory string, prefix string) {
 	paths, _ := ioutil.ReadDir(directory)
 
 	var dirs []os.FileInfo
