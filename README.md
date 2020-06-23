@@ -5,7 +5,6 @@ find files
 wicked fast
 
 ```
- $ fnf -h
 $ fnf -h
 Usage of fnf:
   -k string
